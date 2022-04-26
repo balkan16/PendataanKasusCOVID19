@@ -4,11 +4,13 @@
 
 
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar
+
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -51,6 +53,14 @@ class Login(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master) 
         #window = Toplevel
+        
+        #declaring variable for Login
+        global  message
+        global username
+        global password
+        username = StringVar ()
+        password = StringVar ()
+        message= StringVar ()
 
         master.geometry("1000x600")
         master.title('Pendataan Kasus Covid-19 Indonesia')
@@ -77,7 +87,8 @@ class Login(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable= username
         )
         entry_1.place(
             x=602.0,
@@ -96,7 +107,8 @@ class Login(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable= password
         )
         entry_2.place(
             x=602.0,
@@ -162,7 +174,7 @@ class Login(tk.Frame):
             anchor="nw",
             text="Belum punya akun? ",
             fill="#000000",
-            font=("Inter", 17 * -1)
+            font=("Inter", 14 * -1)
         )
 
         button_image_2 = PhotoImage(
@@ -187,7 +199,7 @@ class Login(tk.Frame):
             image=button_image_3,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame(Homepage),
+            command= lambda:login(),
             relief="flat"
         )
         button_3.place(
@@ -205,6 +217,40 @@ class Login(tk.Frame):
             image=image_image_1
         )
         
+
+        def login():
+        #getting form data
+            uname=username.get()
+            pwd=password.get()
+            #applying empty validation
+            if uname=='' or pwd=='':
+                message.set("fill the empty field!!!")
+            else:
+                print(uname,pwd)
+                url = 'http://localhost:5000/users/login'
+                myjson = {
+                    'email': uname,
+                    'password':pwd
+                    }
+                x = requests.post(url, json = myjson)
+                #print the response text (the content of the requested file):
+                if x.status_code == 200:
+                    #navigate to menu page
+                    master.switch_frame(Homepage)
+                else:
+                    entry_1.delete(0, 'end')
+                    entry_2.delete(0, 'end')
+                    jsonResponse = x.json()
+                    canvas.create_text(
+                        595.0,
+                        329.9999999999999,
+                        anchor="nw",
+                        text=jsonResponse["msg"],
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+                    )
+                    print(x.text)
+          
         # Muncul setelah Register akun baru
         if(new_register == 1):
             canvas.create_text(
