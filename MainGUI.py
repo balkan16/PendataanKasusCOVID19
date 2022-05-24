@@ -9,7 +9,11 @@ import requests
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
+from gui_DataKum import DataKum
+from gui_tampilDataKum import tampilDataKum
+from gui_TambahData import TambahData
+
 
 
 
@@ -30,7 +34,13 @@ def relative_to_assets_register(path: str) -> Path:
     
 
 new_register = 0
-
+pages = {
+    "dataKum": DataKum,
+    "tambahData": TambahData,
+    "Homepage": Homepage,
+    "Login": Login,
+    "Register": Register
+}
 class MainGUI(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -43,7 +53,9 @@ class MainGUI(tk.Tk):
     # Fungsi Ganti Page
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
-        new_frame = frame_class(self)
+        cls = pages[frame_class]
+        print(cls)
+        new_frame = cls(self)
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
@@ -199,7 +211,7 @@ class Login(tk.Frame):
             image=button_image_3,
             borderwidth=0,
             highlightthickness=0,
-            command= lambda: self.login(),
+            command= lambda:login(),
             relief="flat"
         )
         button_3.place(
@@ -216,7 +228,6 @@ class Login(tk.Frame):
             413.9999999999999,
             image=image_image_1
         )
-        
 
         def login():
         #getting form data
@@ -225,6 +236,15 @@ class Login(tk.Frame):
             #applying empty validation
             if uname=='' or pwd=='':
                 message.set("fill the empty field!!!")
+                canvas.create_text(
+                        595.0,
+                        329.9999999999999,
+                        anchor="nw",
+                        text="Email dan Password tidak boleh kosong",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+                )
+                # print(x.text)
             else:
                 print(uname,pwd)
                 url = 'http://localhost:5000/users/login'
@@ -470,9 +490,51 @@ class Register(tk.Frame):
         
         
     def new_regist(self):
+        new_register = 0
+        self.master.switch_frame(Login)
+
+    def register(self):
         global new_register
         new_register = 1
-        self.master.switch_frame(Login)
+        uname=surel.get()
+        name="arif"
+        pwd=password.get()
+        confPwd=confPassword.get()
+        kota= str(self.kotaTerpilih.get())
+        print(kota)
+        # self.master.switch_frame(Login)
+        #applying empty validation
+        try:
+            if uname=='' or pwd=='':
+                message.set("fill the empty field!!!")
+                self.canvas.itemconfig(self.errorregis, text=message)
+            else:
+                print(uname,pwd)
+                url = 'http://localhost:5000/users'
+                myjson = {
+                    'name':name,
+                    'email': uname,
+                    'password':pwd,
+                    'confPassword':confPwd,
+                    'kota': kota
+                    }
+                x = requests.post(url, json = myjson)
+                print(x.status_code)
+                self.master.switch_frame(Login)
+                # #print the response text (the content of the requested file):
+                # if x.status_code == 200:
+                #     self.master.switch_frame(Login)
+                # else:
+                #     self.entry_1.delete(0, 'end')
+                #     self.entry_2.delete(0, 'end')
+                #     jsonResponse = x.json()
+                #     self.canvas.itemconfig(self.errorregis, text=jsonResponse["msg"])
+                #     print(x.text)
+        except:
+            self.entry_1.delete(0, 'end')
+            self.entry_2.delete(0, 'end')
+            self.canvas.itemconfig(self.errorregis, text="Gagal Menghubungkan ke Server")
+    
 
 # Page Homepage
 class Homepage(tk.Frame):
@@ -569,7 +631,7 @@ class Homepage(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: master.switch_frame(DataKum),
             relief="flat"
         )
         button_1.place(
