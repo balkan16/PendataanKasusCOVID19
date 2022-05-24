@@ -27,18 +27,13 @@ class MainGUI(tk.Tk):
         self.title('Pendataan Kasus Covid-19 Indonesia')
         self.geometry("1000x600")
         self.configure(bg = "#FFFFFF")
-    
+        
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
         new_frame = frame_class(self)
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
-    
-    def back_frame(self):
-        print("ok")
-        from MainGUI import Homepage
-        self.switch_frame(Homepage)
 
 class DataKum(tk.Frame):
         def __init__(self,master):
@@ -180,7 +175,7 @@ class DataKum(tk.Frame):
                 image=button_image_2,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: MainGUI.back_frame(self),
+                command=lambda: master.switch_frame("tambahData"),
                 relief="flat"
             )
             button_2.place(

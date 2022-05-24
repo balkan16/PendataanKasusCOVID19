@@ -8,269 +8,284 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, ttk, StringVar
+import tkinter as tk
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_register")
 
 
-def relative_to_assets(path: str) -> Path:
+def relative_to_assets_register(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+class MainGUI(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self._frame = None
+        self.switch_frame(Register)
+        self.title('Pendataan Kasus Covid-19 Indonesia')
+        self.geometry("1000x600")
+        self.configure(bg = "#FFFFFF")
 
-window = Tk()
+    def switch_frame(self, frame_class):
+        """Destroys current frame and replaces it with a new one."""
+        new_frame = frame_class(self)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
 
-window.geometry("1000x600")
-window.configure(bg = "#FFFFFF")
-
-
-canvas = Canvas(
-    window,
-    bg = "#FFFFFF",
-    height = 600,
-    width = 1000,
-    bd = 0,
-    highlightthickness = 0,
-    relief = "ridge"
-)
-
-#declaring variable for Login
-global  message
-global surel
-global password
-global confPassword
-
-surel = StringVar ()
-password = StringVar ()
-message= StringVar ()
-confPassword= StringVar ()
+# Page Register
+class Register(tk.Frame):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master) 
+        master.geometry("1000x600")
+        master.title('Pendataan Kasus Covid-19 Indonesia')
+        #window.configure(bg = "#FFFFFF")
 
 
-canvas.place(x = 0, y = 0)
-entry_image_1 = PhotoImage(
-    file=relative_to_assets("entry_1.png"))
-entry_bg_1 = canvas.create_image(
-    736.0,
-    172.0,
-    image=entry_image_1
-)
-entry_1 = Entry(
-    bd=0,
-    bg="#F4F4F4",
-    highlightthickness=0,
-    textvariable=surel
-)
-entry_1.place(
-    x=602.0,
-    y=152.0,
-    width=268.0,
-    height=38.0
-)
+        canvas = Canvas(
+            bg = "#FFFFFF",
+            height = 600,
+            width = 1000,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
 
-entry_image_2 = PhotoImage(
-    file=relative_to_assets("entry_2.png"))
-entry_bg_2 = canvas.create_image(
-    736.0,
-    246.0,
-    image=entry_image_2
-)
-entry_2 = Entry(
-    bd=0,
-    bg="#F4F4F4",
-    highlightthickness=0,
-    textvariable=password
-)
-entry_2.place(
-    x=602.0,
-    y=226.0,
-    width=268.0,
-    height=38.0
-)
+        canvas.place(x = 0, y = 0)
+        entry_image_1 = PhotoImage(
+            file=relative_to_assets_register("entry_1.png"))
+        entry_bg_1 = canvas.create_image(
+            736.0,
+            172.0,
+            image=entry_image_1
+        )
+        entry_1 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_1.place(
+            x=602.0,
+            y=152.0,
+            width=268.0,
+            height=38.0
+        )
 
-canvas.create_text(
-    595.0,
-    128.0,
-    anchor="nw",
-    text="Email",
-    fill="#000000",
-    font=("Inter", 20 * -1)
-)
+        entry_image_2 = PhotoImage(
+            file=relative_to_assets_register("entry_2.png"))
+        entry_bg_2 = canvas.create_image(
+            736.0,
+            246.0,
+            image=entry_image_2
+        )
+        entry_2 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_2.place(
+            x=602.0,
+            y=226.0,
+            width=268.0,
+            height=38.0
+        )
 
-canvas.create_text(
-    595.0,
-    202.0,
-    anchor="nw",
-    text="Password",
-    fill="#000000",
-    font=("Inter", 20 * -1)
-)
+        canvas.create_text(
+            595.0,
+            128.0,
+            anchor="nw",
+            text="Email",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
 
-entry_image_3 = PhotoImage(
-    file=relative_to_assets("entry_3.png"))
-entry_bg_3 = canvas.create_image(
-    736.0,
-    318.0,
-    image=entry_image_3
-)
+        canvas.create_text(
+        594.0,
+        54.0,
+        anchor="nw",
+        text="Nama",
+        fill="#000000",
+        font=("Inter", 20 * -1)
+        )
 
-entry_3 = Entry(
-    bd=0,
-    bg="#F4F4F4",
-    highlightthickness=0,
-    textvariable=confPassword
-)
-entry_3.place(
-    x=602.0,
-    y=298.0,
-    width=268.0,
-    height=38.0
-)
+        entry_image_4 = PhotoImage(
+            file=relative_to_assets_register("entry_4.png"))
+        entry_bg_4 = canvas.create_image(
+            736.0,
+            318.0,
+            image=entry_image_4
+        )
+        entry_4 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_4.place(
+            x=602.0,
+            y=78.0,
+            width=268.0,
+            height=38.0
+        )
 
-canvas.create_text(
-    595.0,
-    274.0,
-    anchor="nw",
-    text="Konfirmasi Password",
-    fill="#000000",
-    font=("Inter", 20 * -1)
-)
+        canvas.create_text(
+            595.0,
+            202.0,
+            anchor="nw",
+            text="Password",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
 
-canvas.create_text(
-    595.0,
-    346.0,
-    anchor="nw",
-    text="Kota",
-    fill="#000000",
-    font=("Inter", 18 * -1)
-)
+        entry_image_3 = PhotoImage(
+            file=relative_to_assets_register("entry_4.png"))
+        entry_bg_3 = canvas.create_image(
+            736.0,
+            318.0,
+            image=entry_image_3
+        )
+        entry_3 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_3.place(
+            x=602.0,
+            y=298.0,
+            width=268.0,
+            height=38.0
+        )
 
-n = StringVar()
-kotaTerpilih = ttk.Combobox(window, width = 27,state="readonly", 
-                            textvariable = n,font=("Inter", 12 * -1))
-  
-# Adding combobox drop down list
-kotaTerpilih['values'] = (' Jakarta', 
-                          ' Tangerang',
-                          ' Depok',
-                          ' Bekasi',
-                          ' Bogor',
-                          ' Palembang', 
-                        )
+        canvas.create_text(
+            595.0,
+            274.0,
+            anchor="nw",
+            text="Kota",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
 
-kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: window.focus())
-  
-kotaTerpilih.place(
-    x=602.0,
-    y=372.0,
-    width=268.0,
-    height=38.0
-)
+        canvas.create_rectangle(
+            0.0,
+            0.0,
+            459.0,
+            600.0,
+            fill="#00D1FF",
+            outline="")
 
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    459.0,
-    600.0,
-    fill="#00D1FF",
-    outline="")
+        canvas.create_text(
+            28.0,
+            128.0,
+            anchor="nw",
+            text="Pendataan Kasus COVID-19\nIndonesia",
+            fill="#FFFFFF",
+            font=("Inter SemiBold", 30 * -1)
+        )
 
-canvas.create_text(
-    28.0,
-    128.0,
-    anchor="nw",
-    text="Pendataan Kasus COVID-19\nIndonesia",
-    fill="#FFFFFF",
-    font=("Inter SemiBold", 30 * -1)
-)
+        canvas.create_text(
+            595.0,
+            430.0,
+            anchor="nw",
+            text="Sudah punya akun? ",
+            fill="#000000",
+            font=("Inter", 17 * -1)
+        )
 
-canvas.create_text(
-    595.0,
-    480.0,
-    anchor="nw",
-    text="Sudah punya akun? ",
-    fill="#000000",
-    font=("Inter", 17 * -1)
-)
+        button_image_1 = PhotoImage(
+            file=relative_to_assets_register("button_1.png"))
+        button_1 = Button(
+            image=button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: master.switch_frame(Login),
+            relief="flat"
+        )
+        button_1.place(
+            x=768.0,
+            y=430.0,
+            width=52.0,
+            height=25.0
+        )
 
-button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
-)
-button_1.place(
-    x=768.0,
-    y=480.0,
-    width=52.0,
-    height=25.0
-)
+        button_image_2 = PhotoImage(
+            file=relative_to_assets_register("button_2.png"))
+        button_2 = Button(
+            image=button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.new_regist(),
+            relief="flat"
+        )
+        button_2.place(
+            x=631.0,
+            y=369.0,
+            width=209.0,
+            height=38.0
+        )
 
-button_image_2 = PhotoImage(
-    file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: register(),
-    relief="flat"
-)
-button_2.place(
-    x=631.0,
-    y=419.0,
-    width=209.0,
-    height=38.0
-)
+        image_image_1 = PhotoImage(
+            file=relative_to_assets_register("image_1.png"))
+        image_1 = canvas.create_image(
+            238.0,
+            407.0,
+            image=image_image_1
+        )
+        
+        #if(new_register == 1):
+        #    master.switch_frame(Login)
+        
+        master.resizable(False, False)
+        master.mainloop()
 
-image_image_1 = PhotoImage(
-    file=relative_to_assets("image_1.png"))
-image_1 = canvas.create_image(
-    238.0,
-    417.0,
-    image=image_image_1
-)
-window.resizable(False, False)
-window.mainloop()
+        
+        
+    def new_regist(self):
+        new_register = 0
+        self.master.switch_frame(Login)
 
-def register(self):
-    uname=surel.get()
-    pwd=password.get()
-    kota=kotaTerpilih.current()
-    #applying empty validation
-    try:
-        if uname=='' or pwd=='':
-            message.set("fill the empty field!!!")
-    
-        else:
-            print(uname,pwd)
-            url = 'http://localhost:5000/users'
-            myjson = {
-                'email': uname,
-                'password':pwd,
-                'confPassword':confPassword,
-                'kota':kota
-                }
-            x = requests.post(url, json = myjson)
-            #print the response text (the content of the requested file):
-            if x.status_code == 200:
-                #navigate to menu page
-                # print("here")
-                # url = 'http://localhost:5000/users/token'
-                # response_token = requests.get(url)
-                jsonToken = x.json()
-                accessToken = jsonToken["accessToken"]
-                print(accessToken)
-                master.switch_frame(Homepage)
+    def register(self):
+        global new_register
+        new_register = 1
+        uname=surel.get()
+        name="arif"
+        pwd=password.get()
+        confPwd=confPassword.get()
+        kota= str(self.kotaTerpilih.get())
+        print(kota)
+        # self.master.switch_frame(Login)
+        #applying empty validation
+        try:
+            if uname=='' or pwd=='':
+                message.set("fill the empty field!!!")
+                self.canvas.itemconfig(self.errorregis, text=message)
             else:
-                self.entry_1.delete(0, 'end')
-                self.entry_2.delete(0, 'end')
-                jsonResponse = x.json()
-                self.canvas.itemconfig(self.errorlogin, text=jsonResponse["msg"])
-                print(x.text)
-    except:
-        self.entry_1.delete(0, 'end')
-        self.entry_2.delete(0, 'end')
-        self.canvas.itemconfig(self.errorlogin, text="Gagal Menghubungkan ke Server")
+                print(uname,pwd)
+                url = 'http://localhost:5000/users'
+                myjson = {
+                    'name':name,
+                    'email': uname,
+                    'password':pwd,
+                    'confPassword':confPwd,
+                    'kota': kota
+                    }
+                x = requests.post(url, json = myjson)
+                print(x.status_code)
+                self.master.switch_frame(Login)
+                # #print the response text (the content of the requested file):
+                # if x.status_code == 200:
+                #     self.master.switch_frame(Login)
+                # else:
+                #     self.entry_1.delete(0, 'end')
+                #     self.entry_2.delete(0, 'end')
+                #     jsonResponse = x.json()
+                #     self.canvas.itemconfig(self.errorregis, text=jsonResponse["msg"])
+                #     print(x.text)
+        except:
+            self.entry_1.delete(0, 'end')
+            self.entry_2.delete(0, 'end')
+            self.canvas.itemconfig(self.errorregis, text="Gagal Menghubungkan ke Server")
+
+if __name__ == "__main__":
+    app = MainGUI()
+    app.mainloop()

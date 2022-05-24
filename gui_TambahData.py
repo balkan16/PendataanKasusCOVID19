@@ -236,7 +236,7 @@ class TambahData(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: master.switch_frame("dataKum"),
             relief="flat"
         )
         button_1.place(
@@ -260,7 +260,7 @@ class TambahData(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=lambda: master.switch_frame("tambahData"),
             relief="flat"
         )
         button_2.place(

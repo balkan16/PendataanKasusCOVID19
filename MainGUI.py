@@ -37,9 +37,6 @@ new_register = 0
 pages = {
     "dataKum": DataKum,
     "tambahData": TambahData,
-    "Homepage": Homepage,
-    "Login": Login,
-    "Register": Register
 }
 class MainGUI(tk.Tk):
     def __init__(self):
