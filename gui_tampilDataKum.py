@@ -11,6 +11,7 @@ import tkinter as tk
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_tampilDataKum")
 
@@ -278,7 +279,7 @@ class tampilDataKum(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: master.switch_frame(DataKum),
             relief="flat"
         )
         button_1.place(

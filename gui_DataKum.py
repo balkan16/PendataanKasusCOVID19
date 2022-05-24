@@ -11,9 +11,9 @@ import tkinter as tk
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_datakum")
-
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -34,6 +34,11 @@ class MainGUI(tk.Tk):
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
+    
+    def back_frame(self):
+        print("ok")
+        from MainGUI import Homepage
+        self.switch_frame(Homepage)
 
 class DataKum(tk.Frame):
         def __init__(self,master):
@@ -151,7 +156,7 @@ class DataKum(tk.Frame):
                 image=button_image_1,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_1 clicked"),
+                command=lambda:print("button1`"),
                 relief="flat"
             )
             button_1.place(
@@ -175,7 +180,7 @@ class DataKum(tk.Frame):
                 image=button_image_2,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: print("button_2 clicked"),
+                command=lambda: MainGUI.back_frame(self),
                 relief="flat"
             )
             button_2.place(

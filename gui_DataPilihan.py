@@ -42,6 +42,7 @@ entry_bg_1 = canvas.create_image(
     287.0,
     image=entry_image_1
 )
+entry_bg_1.
 entry_1 = Entry(
     bd=0,
     bg="#F4F4F4",
