@@ -13,6 +13,9 @@ const Users = db.define('users',{
     password:{
         type: DataTypes.STRING
     },
+    kota:{
+        type: DataTypes.STRING
+    },
     refresh_token:{
         type: DataTypes.TEXT
     },

@@ -35,7 +35,8 @@ Content-Type: application/json
     "name": "Balkan",
     "email": "balkankhilmi@gmail.com",
     "password": "ppljASIK",
-    "confPassword": "ppljASIK"
+    "confPassword": "ppljASIK",
+    "kota": "Palembang"
 }
 
 ###
@@ -49,7 +50,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsIm5hbWUiOiJCYWxrYW4iLCJlbWFpbCI6ImJhbGthbmtoaWxtaUBnbWFpbC5jb20iLCJpYXQiOjE2NTA5MTg3NTAsImV4cCI6MTY1MDkxODc2NX0.YatvzprCgWxVQ-aJjOIOnTTO4qBasGuyRQd7dwqYcCc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsIm5hbWUiOiJCYWxrYW4iLCJlbWFpbCI6ImJhbGthbmtoaWxtaUBnbWFpbC5jb20iLCJpYXQiOjE2NTA5NTE3MTEsImV4cCI6MTY1MTAzODExMX0.ri3YLWHDRnVnfZFRiikGOdD0-PpX6P2CG0QPX2VfIJI
 
 ###
 GET http://localhost:5000/users/token

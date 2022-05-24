@@ -3,11 +3,12 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 
+import requests
 from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, ttk, StringVar
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -34,6 +35,18 @@ canvas = Canvas(
     relief = "ridge"
 )
 
+#declaring variable for Login
+global  message
+global surel
+global password
+global confPassword
+
+surel = StringVar ()
+password = StringVar ()
+message= StringVar ()
+confPassword= StringVar ()
+
+
 canvas.place(x = 0, y = 0)
 entry_image_1 = PhotoImage(
     file=relative_to_assets("entry_1.png"))
@@ -45,7 +58,8 @@ entry_bg_1 = canvas.create_image(
 entry_1 = Entry(
     bd=0,
     bg="#F4F4F4",
-    highlightthickness=0
+    highlightthickness=0,
+    textvariable=surel
 )
 entry_1.place(
     x=602.0,
@@ -64,7 +78,8 @@ entry_bg_2 = canvas.create_image(
 entry_2 = Entry(
     bd=0,
     bg="#F4F4F4",
-    highlightthickness=0
+    highlightthickness=0,
+    textvariable=password
 )
 entry_2.place(
     x=602.0,
@@ -77,7 +92,7 @@ canvas.create_text(
     595.0,
     128.0,
     anchor="nw",
-    text="Username",
+    text="Email",
     fill="#000000",
     font=("Inter", 20 * -1)
 )
@@ -98,10 +113,12 @@ entry_bg_3 = canvas.create_image(
     318.0,
     image=entry_image_3
 )
+
 entry_3 = Entry(
     bd=0,
     bg="#F4F4F4",
-    highlightthickness=0
+    highlightthickness=0,
+    textvariable=confPassword
 )
 entry_3.place(
     x=602.0,
@@ -114,9 +131,40 @@ canvas.create_text(
     595.0,
     274.0,
     anchor="nw",
-    text="Kota",
+    text="Konfirmasi Password",
     fill="#000000",
     font=("Inter", 20 * -1)
+)
+
+canvas.create_text(
+    595.0,
+    346.0,
+    anchor="nw",
+    text="Kota",
+    fill="#000000",
+    font=("Inter", 18 * -1)
+)
+
+n = StringVar()
+kotaTerpilih = ttk.Combobox(window, width = 27,state="readonly", 
+                            textvariable = n,font=("Inter", 12 * -1))
+  
+# Adding combobox drop down list
+kotaTerpilih['values'] = (' Jakarta', 
+                          ' Tangerang',
+                          ' Depok',
+                          ' Bekasi',
+                          ' Bogor',
+                          ' Palembang', 
+                        )
+
+kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: window.focus())
+  
+kotaTerpilih.place(
+    x=602.0,
+    y=372.0,
+    width=268.0,
+    height=38.0
 )
 
 canvas.create_rectangle(
@@ -138,7 +186,7 @@ canvas.create_text(
 
 canvas.create_text(
     595.0,
-    430.0,
+    480.0,
     anchor="nw",
     text="Sudah punya akun? ",
     fill="#000000",
@@ -156,7 +204,7 @@ button_1 = Button(
 )
 button_1.place(
     x=768.0,
-    y=430.0,
+    y=480.0,
     width=52.0,
     height=25.0
 )
@@ -167,12 +215,12 @@ button_2 = Button(
     image=button_image_2,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
+    command=lambda: register(),
     relief="flat"
 )
 button_2.place(
     x=631.0,
-    y=369.0,
+    y=419.0,
     width=209.0,
     height=38.0
 )
@@ -181,8 +229,48 @@ image_image_1 = PhotoImage(
     file=relative_to_assets("image_1.png"))
 image_1 = canvas.create_image(
     238.0,
-    407.0,
+    417.0,
     image=image_image_1
 )
 window.resizable(False, False)
 window.mainloop()
+
+def register(self):
+    uname=surel.get()
+    pwd=password.get()
+    kota=kotaTerpilih.current()
+    #applying empty validation
+    try:
+        if uname=='' or pwd=='':
+            message.set("fill the empty field!!!")
+    
+        else:
+            print(uname,pwd)
+            url = 'http://localhost:5000/users'
+            myjson = {
+                'email': uname,
+                'password':pwd,
+                'confPassword':confPassword,
+                'kota':kota
+                }
+            x = requests.post(url, json = myjson)
+            #print the response text (the content of the requested file):
+            if x.status_code == 200:
+                #navigate to menu page
+                # print("here")
+                # url = 'http://localhost:5000/users/token'
+                # response_token = requests.get(url)
+                jsonToken = x.json()
+                accessToken = jsonToken["accessToken"]
+                print(accessToken)
+                master.switch_frame(Homepage)
+            else:
+                self.entry_1.delete(0, 'end')
+                self.entry_2.delete(0, 'end')
+                jsonResponse = x.json()
+                self.canvas.itemconfig(self.errorlogin, text=jsonResponse["msg"])
+                print(x.text)
+    except:
+        self.entry_1.delete(0, 'end')
+        self.entry_2.delete(0, 'end')
+        self.canvas.itemconfig(self.errorlogin, text="Gagal Menghubungkan ke Server")

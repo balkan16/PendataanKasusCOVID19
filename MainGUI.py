@@ -9,7 +9,7 @@ import requests
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
 
 
 
@@ -27,9 +27,11 @@ def relative_to_assets_login(path: str) -> Path:
     
 def relative_to_assets_register(path: str) -> Path:
     return ASSETS_PATH_REGISTER / Path(path)
-    
+
+
 
 new_register = 0
+accessToken = ""
 
 class MainGUI(tk.Tk):
     def __init__(self):
@@ -58,9 +60,11 @@ class Login(tk.Frame):
         global  message
         global username
         global password
+        
         username = StringVar ()
         password = StringVar ()
         message= StringVar ()
+        
 
         master.geometry("1000x600")
         master.title('Pendataan Kasus Covid-19 Indonesia')
@@ -199,7 +203,7 @@ class Login(tk.Frame):
             image=button_image_3,
             borderwidth=0,
             highlightthickness=0,
-            command= lambda:login(),
+            command= lambda:self.login(),
             relief="flat"
         )
         button_3.place(
@@ -217,39 +221,14 @@ class Login(tk.Frame):
             image=image_image_1
         )
         
-
-        def login():
-        #getting form data
-            uname=username.get()
-            pwd=password.get()
-            #applying empty validation
-            if uname=='' or pwd=='':
-                message.set("fill the empty field!!!")
-            else:
-                print(uname,pwd)
-                url = 'http://localhost:5000/users/login'
-                myjson = {
-                    'email': uname,
-                    'password':pwd
-                    }
-                x = requests.post(url, json = myjson)
-                #print the response text (the content of the requested file):
-                if x.status_code == 200:
-                    #navigate to menu page
-                    master.switch_frame(Homepage)
-                else:
-                    entry_1.delete(0, 'end')
-                    entry_2.delete(0, 'end')
-                    jsonResponse = x.json()
-                    canvas.create_text(
-                        595.0,
-                        329.9999999999999,
-                        anchor="nw",
-                        text=jsonResponse["msg"],
-                        fill="#ff0000",
-                        font=("Inter", 17 * -1)
-                    )
-                    print(x.text)
+        errorlogin = canvas.create_text(
+                            595.0,
+                            329.9999999999999,
+                            anchor="nw",
+                            text='',
+                            fill="#ff0000",
+                            font=("Inter", 17 * -1)
+        )
           
         # Muncul setelah Register akun baru
         if(new_register == 1):
@@ -264,6 +243,45 @@ class Login(tk.Frame):
         master.resizable(False, False)
         master.mainloop()
 
+    def login(self):
+    #getting form data
+        uname=username.get()
+        pwd=password.get()
+        global accessToken
+        #applying empty validation
+        try:
+            if uname=='' or pwd=='':
+                message.set("fill the empty field!!!")
+        
+            else:
+                print(uname,pwd)
+                url = 'http://localhost:5000/users/login'
+                myjson = {
+                    'email': uname,
+                    'password':pwd
+                    }
+                x = requests.post(url, json = myjson)
+                #print the response text (the content of the requested file):
+                if x.status_code == 200:
+                    #navigate to menu page
+                    # print("here")
+                    # url = 'http://localhost:5000/users/token'
+                    # response_token = requests.get(url)
+                    jsonToken = x.json()
+                    accessToken = jsonToken["accessToken"]
+                    print(accessToken)
+                    self.master.switch_frame(Homepage)
+                else:
+                    self.entry_1.delete(0, 'end')
+                    self.entry_2.delete(0, 'end')
+                    jsonResponse = x.json()
+                    self.canvas.itemconfig(self.errorlogin, text=jsonResponse["msg"])
+                    print(x.text)
+        except:
+            self.entry_1.delete(0, 'end')
+            self.entry_2.delete(0, 'end')
+            self.canvas.itemconfig(self.errorlogin, text="Gagal Menghubungkan ke Server")
+
 # Page Register
 class Register(tk.Frame):
     def __init__(self, master):
@@ -272,6 +290,19 @@ class Register(tk.Frame):
         master.title('Pendataan Kasus Covid-19 Indonesia')
         #window.configure(bg = "#FFFFFF")
 
+        #declaring variable for Login
+        global message
+        global surel
+        global password
+        global confPassword
+        global name
+
+        surel = StringVar ()
+        password = StringVar ()
+        message= StringVar ()
+        confPassword= StringVar ()
+        name = StringVar()
+        kota = StringVar
 
         canvas = Canvas(
             bg = "#FFFFFF",
@@ -293,7 +324,8 @@ class Register(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=surel
         )
         entry_1.place(
             x=602.0,
@@ -312,7 +344,8 @@ class Register(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=password
         )
         entry_2.place(
             x=602.0,
@@ -349,7 +382,8 @@ class Register(tk.Frame):
         entry_3 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=confPassword
         )
         entry_3.place(
             x=602.0,
@@ -359,14 +393,44 @@ class Register(tk.Frame):
         )
 
         canvas.create_text(
-            595.0,
-            274.0,
-            anchor="nw",
-            text="Kota",
-            fill="#000000",
-            font=("Inter", 20 * -1)
+        595.0,
+        274.0,
+        anchor="nw",
+        text="Konfirmasi Password",
+        fill="#000000",
+        font=("Inter", 20 * -1)
         )
 
+        canvas.create_text(
+        595.0,
+        346.0,
+        anchor="nw",
+        text="Kota",
+        fill="#000000",
+        font=("Inter", 18 * -1)
+        )
+
+        n = StringVar()
+        self.kotaTerpilih = ttk.Combobox(master, width = 27,state="readonly", 
+                                    textvariable = n,font=("Inter", 12 * -1))
+        
+        # Adding combobox drop down list
+        self.kotaTerpilih['values'] = (' Jakarta', 
+                                ' Tangerang',
+                                ' Depok',
+                                ' Bekasi',
+                                ' Bogor',
+                                ' Palembang', 
+                                )
+
+        self.kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: master.focus())
+        
+        self.kotaTerpilih.place(
+            x=602.0,
+            y=372.0,
+            width=268.0,
+            height=38.0
+        )
         canvas.create_rectangle(
             0.0,
             0.0,
@@ -386,11 +450,20 @@ class Register(tk.Frame):
 
         canvas.create_text(
             595.0,
-            430.0,
+            490.0,
             anchor="nw",
             text="Sudah punya akun? ",
             fill="#000000",
             font=("Inter", 17 * -1)
+        )
+
+        errorregis = canvas.create_text(
+            595.0,
+            480.0,
+            anchor="nw",
+            text="",
+            fill="#ff0000",
+            font=("Inter", 12 * -1)
         )
 
         button_image_1 = PhotoImage(
@@ -399,12 +472,12 @@ class Register(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame(Login),
+            command=lambda: self.new_regist(),
             relief="flat"
         )
         button_1.place(
             x=768.0,
-            y=430.0,
+            y=490.0,
             width=52.0,
             height=25.0
         )
@@ -415,12 +488,12 @@ class Register(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.new_regist(),
+            command=lambda: self.register(),
             relief="flat"
         )
         button_2.place(
             x=631.0,
-            y=369.0,
+            y=429.0,
             width=209.0,
             height=38.0
         )
@@ -429,7 +502,7 @@ class Register(tk.Frame):
             file=relative_to_assets_register("image_1.png"))
         image_1 = canvas.create_image(
             238.0,
-            407.0,
+            427.0,
             image=image_image_1
         )
         
@@ -440,9 +513,49 @@ class Register(tk.Frame):
         master.mainloop()
         
     def new_regist(self):
+        self.master.switch_frame(Login)
+
+    def register(self):
         global new_register
         new_register = 1
-        self.master.switch_frame(Login)
+        uname=surel.get()
+        name="arif"
+        pwd=password.get()
+        kota= str(self.kotaTerpilih.get())
+        print(kota)
+        # self.master.switch_frame(Login)
+        #applying empty validation
+        try:
+            if uname=='' or pwd=='':
+                message.set("fill the empty field!!!")
+                self.canvas.itemconfig(self.errorregis, text=message)
+            else:
+                print(uname,pwd)
+                url = 'http://localhost:5000/users'
+                myjson = {
+                    'name':name,
+                    'email': uname,
+                    'password':pwd,
+                    'confPassword':confPassword,
+                    'kota': kota
+                    }
+                x = requests.post(url, json = myjson)
+                print(x.status_code)
+                self.master.switch_frame(Login)
+                # #print the response text (the content of the requested file):
+                # if x.status_code == 200:
+                #     self.master.switch_frame(Login)
+                # else:
+                #     self.entry_1.delete(0, 'end')
+                #     self.entry_2.delete(0, 'end')
+                #     jsonResponse = x.json()
+                #     self.canvas.itemconfig(self.errorregis, text=jsonResponse["msg"])
+                #     print(x.text)
+        except:
+            self.entry_1.delete(0, 'end')
+            self.entry_2.delete(0, 'end')
+            self.canvas.itemconfig(self.errorregis, text="Gagal Menghubungkan ke Server")
+    
 
 # Page Homepage
 class Homepage(tk.Frame):
@@ -451,6 +564,9 @@ class Homepage(tk.Frame):
         master.geometry("1000x600")
         master.configure(bg = "#FFFFFF")
         master.title('Pendataan Kasus Covid-19 Indonesia')
+
+        global  refreshToken
+        refreshToken = StringVar ()
 
         canvas = Canvas(
             bg = "#FFFFFF",
@@ -533,13 +649,14 @@ class Homepage(tk.Frame):
             font=("Inter Light", 16 * -1)
         )
 
+        #datakumulatif
         button_image_1 = PhotoImage(
             file=relative_to_assets_homepage("button_1.png"))
         button_1 = Button(
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: self.datakumulatif(),
             relief="flat"
         )
         button_1.place(
@@ -630,6 +747,17 @@ class Homepage(tk.Frame):
         )
         master.resizable(False, False)
         master.mainloop()
+
+        
+    def datakumulatif(self):
+        url = 'http://localhost:5000/kasus'
+        global accessToken
+        headers = {"Authorization":"Bearer " + accessToken}
+        response = requests.get(url,headers=headers)
+        data_json = response.json()
+        print(data_json)
+        # print(header)
+            
 
 if __name__ == "__main__":
     app = MainGUI()

@@ -13,7 +13,7 @@ export const getUsers = async (req,res) => {
 
 export const Register = async(req,res) => {
     try{
-        const { name, email, password, confPassword } = req.body;
+        const { name, email, kota, password, confPassword } = req.body;
         if(password !== confPassword) return res.status(400).json({
             message: "Konfirmasi Password tidak sama"
         });
@@ -23,6 +23,7 @@ export const Register = async(req,res) => {
             await Users.create({
                 name: name,
                 email: email,
+                kota: kota,
                 password: hashPassword
             });
             res.json({msg: "Akun berhasil didaftarkan"})
@@ -46,8 +47,9 @@ export const Login = async(req,res) => {
         const userId = user[0].id;
         const name = user[0].name;
         const email = user[0].email;
+        const kota = user[0].kota;
         const accessToken = jwt.sign({userId, name, email}, process.env.ACCESS_TOKEN_SECRET,{
-            expiresIn: '20s'
+            expiresIn: '1d'
         });
         const refreshToken = jwt.sign({userId, name, email}, process.env.REFRESH_TOKEN_SECRET,{
             expiresIn: '1d'
