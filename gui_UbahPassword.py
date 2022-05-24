@@ -7,6 +7,7 @@ from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
+import tkinter as tk
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 
 
@@ -17,144 +18,166 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets_UbahPassword")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+class MainGUI(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self._frame = None
+        self.switch_frame(UbahPass)
+        self.title('Pendataan Kasus Covid-19 Indonesia')
+        self.geometry("1000x600")
+        self.configure(bg = "#FFFFFF")
 
-window = Tk()
+    def switch_frame(self, frame_class):
+        """Destroys current frame and replaces it with a new one."""
+        new_frame = frame_class(self)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
 
-window.geometry("1000x600")
-window.configure(bg = "#FFFFFF")
 
+class UbahPass(tk.Frame):
+    def __init__(self,master):
+        tk.Frame.__init__(self, master) 
+        #window = Toplevel
+        master.geometry("1000x600")
+        master.title('Pendataan Kasus Covid-19 Indonesia')
+        master.configure(bg = "#FFFFFF")
+        #declaring variable for Login   
+        
+        canvas = Canvas(
+            bg = "#FFFFFF",
+            height = 600,
+            width = 1000,
+            bd = 0,
+            highlightthickness = 0,
+            relief = "ridge"
+        )
 
-canvas = Canvas(
-    window,
-    bg = "#FFFFFF",
-    height = 600,
-    width = 1000,
-    bd = 0,
-    highlightthickness = 0,
-    relief = "ridge"
-)
+        canvas.place(x = 0, y = 0)
+        entry_image_1 = PhotoImage(
+            file=relative_to_assets("entry_1.png"))
+        entry_bg_1 = canvas.create_image(
+            750.0,
+            237.0,
+            image=entry_image_1
+        )
+        entry_1 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_1.place(
+            x=616.0,
+            y=217.0,
+            width=268.0,
+            height=38.0
+        )
 
-canvas.place(x = 0, y = 0)
-entry_image_1 = PhotoImage(
-    file=relative_to_assets("entry_1.png"))
-entry_bg_1 = canvas.create_image(
-    750.0,
-    237.0,
-    image=entry_image_1
-)
-entry_1 = Entry(
-    bd=0,
-    bg="#F4F4F4",
-    highlightthickness=0
-)
-entry_1.place(
-    x=616.0,
-    y=217.0,
-    width=268.0,
-    height=38.0
-)
+        entry_image_2 = PhotoImage(
+            file=relative_to_assets("entry_2.png"))
+        entry_bg_2 = canvas.create_image(
+            750.0,
+            311.0,
+            image=entry_image_2
+        )
+        entry_2 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_2.place(
+            x=616.0,
+            y=291.0,
+            width=268.0,
+            height=38.0
+        )
 
-entry_image_2 = PhotoImage(
-    file=relative_to_assets("entry_2.png"))
-entry_bg_2 = canvas.create_image(
-    750.0,
-    311.0,
-    image=entry_image_2
-)
-entry_2 = Entry(
-    bd=0,
-    bg="#F4F4F4",
-    highlightthickness=0
-)
-entry_2.place(
-    x=616.0,
-    y=291.0,
-    width=268.0,
-    height=38.0
-)
+        canvas.create_text(
+            609.0,
+            193.0,
+            anchor="nw",
+            text="Masukan Password Lama",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
 
-canvas.create_text(
-    609.0,
-    193.0,
-    anchor="nw",
-    text="Masukan Password Lama",
-    fill="#000000",
-    font=("Inter", 20 * -1)
-)
+        canvas.create_text(
+            609.0,
+            267.0,
+            anchor="nw",
+            text="Masukan Password Baru",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
 
-canvas.create_text(
-    609.0,
-    267.0,
-    anchor="nw",
-    text="Masukan Password Baru",
-    fill="#000000",
-    font=("Inter", 20 * -1)
-)
+        canvas.create_rectangle(
+            0.0,
+            0.0,
+            459.0,
+            600.0,
+            fill="#00D1FF",
+            outline="")
 
-canvas.create_rectangle(
-    0.0,
-    0.0,
-    459.0,
-    600.0,
-    fill="#00D1FF",
-    outline="")
+        canvas.create_text(
+            37.0,
+            145.0,
+            anchor="nw",
+            text="Pendataan Kasus COVID-19\nIndonesia",
+            fill="#FFFFFF",
+            font=("Inter SemiBold", 30 * -1)
+        )
 
-canvas.create_text(
-    37.0,
-    145.0,
-    anchor="nw",
-    text="Pendataan Kasus COVID-19\nIndonesia",
-    fill="#FFFFFF",
-    font=("Inter SemiBold", 30 * -1)
-)
+        canvas.create_text(
+            37.0,
+            77.0,
+            anchor="nw",
+            text="Ubah Profil - Username",
+            fill="#FFFFFF",
+            font=("Inter SemiBold", 30 * -1)
+        )
 
-canvas.create_text(
-    37.0,
-    77.0,
-    anchor="nw",
-    text="Ubah Profil - Username",
-    fill="#FFFFFF",
-    font=("Inter SemiBold", 30 * -1)
-)
+        button_image_1 = PhotoImage(
+            file=relative_to_assets("button_1.png"))
+        button_1 = Button(
+            image=button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_1 clicked"),
+            relief="flat"
+        )
+        button_1.place(
+            x=689.0,
+            y=365.0,
+            width=122.0,
+            height=36.0
+        )
 
-button_image_1 = PhotoImage(
-    file=relative_to_assets("button_1.png"))
-button_1 = Button(
-    image=button_image_1,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
-)
-button_1.place(
-    x=689.0,
-    y=365.0,
-    width=122.0,
-    height=36.0
-)
+        image_image_1 = PhotoImage(
+            file=relative_to_assets("image_1.png"))
+        image_1 = canvas.create_image(
+            229.0,
+            414.0,
+            image=image_image_1
+        )
 
-image_image_1 = PhotoImage(
-    file=relative_to_assets("image_1.png"))
-image_1 = canvas.create_image(
-    229.0,
-    414.0,
-    image=image_image_1
-)
+        button_image_2 = PhotoImage(
+            file=relative_to_assets("button_2.png"))
+        button_2 = Button(
+            image=button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: print("button_2 clicked"),
+            relief="flat"
+        )
+        button_2.place(
+            x=37.0,
+            y=8.0,
+            width=102.0,
+            height=37.0
+        )
+        master.resizable(False, False)
+        master.mainloop()
 
-button_image_2 = PhotoImage(
-    file=relative_to_assets("button_2.png"))
-button_2 = Button(
-    image=button_image_2,
-    borderwidth=0,
-    highlightthickness=0,
-    command=lambda: print("button_2 clicked"),
-    relief="flat"
-)
-button_2.place(
-    x=37.0,
-    y=8.0,
-    width=102.0,
-    height=37.0
-)
-window.resizable(False, False)
-window.mainloop()
+if __name__ == "__main__":
+    app = MainGUI()
+    app.mainloop()
