@@ -3,13 +3,13 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 
-import requests
+#import requests
 from pathlib import Path
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar,ttk
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -76,8 +76,8 @@ class Register(tk.Frame):
         entry_image_2 = PhotoImage(
             file=relative_to_assets_register("entry_2.png"))
         entry_bg_2 = canvas.create_image(
-            736.0,
-            246.0,
+            737.0,
+            98.0,
             image=entry_image_2
         )
         entry_2 = Entry(
@@ -86,6 +86,25 @@ class Register(tk.Frame):
             highlightthickness=0
         )
         entry_2.place(
+            x=603.0,
+            y=78.0,
+            width=268.0,
+            height=38.0
+        )
+
+        entry_image_3 = PhotoImage(
+            file=relative_to_assets_register("entry_3.png"))
+        entry_bg_3 = canvas.create_image(
+            736.0,
+            246.0,
+            image=entry_image_3
+        )
+        entry_3 = Entry(
+            bd=0,
+            bg="#F4F4F4",
+            highlightthickness=0
+        )
+        entry_3.place(
             x=602.0,
             y=226.0,
             width=268.0,
@@ -102,29 +121,32 @@ class Register(tk.Frame):
         )
 
         canvas.create_text(
-        594.0,
-        54.0,
-        anchor="nw",
-        text="Nama",
-        fill="#000000",
-        font=("Inter", 20 * -1)
+            594.0,
+            54.0,
+            anchor="nw",
+            text="Nama",
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
-        entry_image_4 = PhotoImage(
-            file=relative_to_assets_register("entry_4.png"))
-        entry_bg_4 = canvas.create_image(
-            736.0,
-            318.0,
-            image=entry_image_4
-        )
-        entry_4 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_4.place(
-            x=602.0,
-            y=78.0,
+        n = StringVar()
+        self.kotaTerpilih = ttk.Combobox(master, width = 27,state="readonly", 
+                                    textvariable = n,font=("Inter", 12 * -1))
+
+        # Adding combobox drop down list
+        self.kotaTerpilih['values'] = (' Jakarta', 
+                                ' Tangerang',
+                                ' Depok',
+                                ' Bekasi',
+                                ' Bogor',
+                                ' Palembang', 
+                                )
+
+        self.kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: master.focus())
+
+        self.kotaTerpilih.place(
+            x=600.0,
+            y=375.0,
             width=268.0,
             height=38.0
         )
@@ -138,28 +160,37 @@ class Register(tk.Frame):
             font=("Inter", 20 * -1)
         )
 
-        entry_image_3 = PhotoImage(
+        entry_image_4 = PhotoImage(
             file=relative_to_assets_register("entry_4.png"))
-        entry_bg_3 = canvas.create_image(
+        entry_bg_4 = canvas.create_image(
             736.0,
-            318.0,
-            image=entry_image_3
+            319.0,
+            image=entry_image_4
         )
-        entry_3 = Entry(
+        entry_4 = Entry(
             bd=0,
             bg="#F4F4F4",
             highlightthickness=0
         )
-        entry_3.place(
+        entry_4.place(
             x=602.0,
-            y=298.0,
+            y=299.0,
             width=268.0,
             height=38.0
         )
 
         canvas.create_text(
             595.0,
-            274.0,
+            275.0,
+            anchor="nw",
+            text="Konfirmasi Password",
+            fill="#000000",
+            font=("Inter", 20 * -1)
+        )
+
+        canvas.create_text(
+            595.0,
+            347.0,
             anchor="nw",
             text="Kota",
             fill="#000000",
@@ -185,7 +216,7 @@ class Register(tk.Frame):
 
         canvas.create_text(
             595.0,
-            430.0,
+            500.0,
             anchor="nw",
             text="Sudah punya akun? ",
             fill="#000000",
@@ -198,14 +229,14 @@ class Register(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame(Login),
+            command=lambda: master.switch_frame("login"),
             relief="flat"
         )
         button_1.place(
-            x=768.0,
-            y=430.0,
-            width=52.0,
-            height=25.0
+            x=759.0,
+            y=500.0,
+            width=45.0,
+            height=21.0
         )
 
         button_image_2 = PhotoImage(
@@ -219,7 +250,7 @@ class Register(tk.Frame):
         )
         button_2.place(
             x=631.0,
-            y=369.0,
+            y=439.0,
             width=209.0,
             height=38.0
         )
@@ -227,16 +258,14 @@ class Register(tk.Frame):
         image_image_1 = PhotoImage(
             file=relative_to_assets_register("image_1.png"))
         image_1 = canvas.create_image(
-            238.0,
-            407.0,
+            229.0,
+            413.0,
             image=image_image_1
         )
-        
-        #if(new_register == 1):
-        #    master.switch_frame(Login)
-        
         master.resizable(False, False)
         master.mainloop()
+
+
 
         
         
