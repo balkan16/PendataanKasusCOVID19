@@ -1,8 +1,12 @@
 GET http://localhost:5000/kasus
 
 ###
-GET http://localhost:5000/kasus/11
+GET http://localhost:5000/kasus/user_id/12
+Content-Type: application/json
 
+{
+    "tanggal":"21-04-2022"
+}
 
 
 ###

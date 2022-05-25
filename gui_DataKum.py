@@ -22,6 +22,8 @@ def relative_to_assets(path: str) -> Path:
 meninggal = None
 sembuh = None
 positif = None
+id_user = None
+date = requests.get("http://localhost:5000/kasus/date")
 
 class MainGUI(tk.Tk):
     def __init__(self):
@@ -87,20 +89,28 @@ class DataKum(tk.Frame):
                 324.0,
                 image=entry_image_2
             )
-            entry_2 = Entry(
-                bd=0,
-                bg="#F4F4F4",
-                highlightthickness=0
+            canvas.create_text(
+                610.0,
+                310.0,
+                anchor="nw",
+                text=date.text,
+                fill="#000000",
+                font=("Inter", 20 * -1)
             )
-            entry_2.place(
-                x=610.0,
-                y=304.0,
-                width=268.0,
-                height=38.0
-            )
-            date = requests.get("http://localhost:5000/kasus/date")
-            entry_2.insert(0, "YYYY-MM-DD")
-            entry_2.bind("<Button-1>", lambda a: entry_2.delete(0, tk.END))
+            # entry_2 = Entry(
+            #     bd=0,
+            #     bg="#F4F4F4",
+            #     highlightthickness=0
+            # )
+            # entry_2.place(
+            #     x=610.0,
+            #     y=304.0,
+            #     width=268.0,
+            #     height=38.0
+            # )
+
+            # entry_2.insert(0, "YYYY-MM-DD")
+            # entry_2.bind("<Button-1>", lambda a: entry_2.delete(0, tk.END))
 
             canvas.create_text(
                 603.0,
@@ -112,15 +122,6 @@ class DataKum(tk.Frame):
             )
 
             canvas.create_text(
-                620.0,
-                238.0,
-                anchor="nw",
-                text="Autofill per User",
-                fill="#AAAAAA",
-                font=("Inter", 20 * -1)
-            )
-
-            canvas.create_text(
                 603.0,
                 280.0,
                 anchor="nw",
@@ -128,7 +129,6 @@ class DataKum(tk.Frame):
                 fill="#000000",
                 font=("Inter", 20 * -1)
             )
-
 
             canvas.create_rectangle(
                 0.0,
@@ -156,13 +156,14 @@ class DataKum(tk.Frame):
                 font=("Inter SemiBold", 30 * -1)
             )
 
+            
             button_image_1 = PhotoImage(
                 file=relative_to_assets("button_1.png"))
             button_1 = Button(
                 image=button_image_1,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda:print("button1`"),
+                command= lambda: tampilkan(),
                 relief="flat"
             )
             button_1.place(
@@ -186,7 +187,7 @@ class DataKum(tk.Frame):
                 image=button_image_2,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: master.switch_frame("tambahData"),
+                command=print("button2"),
                 relief="flat"
             )
             button_2.place(
@@ -194,11 +195,24 @@ class DataKum(tk.Frame):
                 y=8.0,
                 width=102.0,
                 height=37.0
-            )
+            )          
+            
+            def tampilkan():
+                global id_user
+                kota= str(self.kotaTerpilih.get())
+                print(kota)
+                if(kota==" Palembang"):
+                    print("a")
+                    id_user=12
+                elif(kota==" Tangerang"):
+                    id_user=16
+                elif(kota==" Bekasi"):
+                    id_user=17
+                print(id_user)
+                master.switch_frame("tampilDataKum")
+
             master.resizable(False, False)
             master.mainloop()
-
-            
                 
 
 if __name__ == "__main__":

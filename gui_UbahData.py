@@ -279,7 +279,7 @@ class UbahData(tk.Frame):
                 if meninggal2=='' or sembuh2=='' or positif2=='':
                     canvas.itemconfig(self.notif, text= "tidak boleh ada data yang kosong")
                 else:
-                    url = 'http://localhost:5000/kasus'
+                    url = 'http://localhost:5000/kasus/22'
                     myjson = {
                         'positif':positif2,
                         'sembuh': sembuh2,
@@ -287,7 +287,7 @@ class UbahData(tk.Frame):
                         'tanggal': date.text,
                         'user_id': id
                         }
-                    x = requests.post(url, json = myjson)
+                    x = requests.patch(url, json = myjson)
                     print(x.status_code)
                     canvas.itemconfig(self.notif, text= "Data berhasil diubah!")
             except:

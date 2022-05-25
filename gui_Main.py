@@ -15,6 +15,7 @@ from gui_TampilDataPilihan import TampilDataPilihan
 from gui_UbahData import UbahData
 from gui_UbahPassword import UbahPass
 from gui_UbahProfil import UbahProfil
+from gui_tampilDataKum import tampilDataKum
 from login import Login
 from Homepage import Homepage
 from register import Register
@@ -31,6 +32,7 @@ pages = {
     "register": Register,
     "login": Login,
     "homepage": Homepage,
+    "tampilDataKum": tampilDataKum,
     "tampilDataPilihan": TampilDataPilihan,
     "ubahData": UbahData,
     "ubahProfil": UbahProfil,

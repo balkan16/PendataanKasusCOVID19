@@ -17,8 +17,6 @@ from datetime import datetime
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_tambahdata")
 
-ip_server = "localhost"
-
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
@@ -111,7 +109,7 @@ class TambahData(tk.Frame):
             609.0,
             313.0,
             anchor="nw",
-            text="Sembuh",
+            text="Kasus Positif",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -140,7 +138,7 @@ class TambahData(tk.Frame):
             610.0,
             239.0,
             anchor="nw",
-            text="Kasus Positif",
+            text="Meninggal",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -177,7 +175,7 @@ class TambahData(tk.Frame):
             609.0,
             387.0,
             anchor="nw",
-            text="Meninggal",
+            text="Sembuh",
             fill="#000000",
             font=("Inter", 20 * -1)
         )

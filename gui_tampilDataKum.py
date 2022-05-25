@@ -4,11 +4,13 @@
 
 
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+import json
 
 
 
@@ -17,6 +19,10 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets_tampilDataKum")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+
+dataKumulatifs={}
+import gui_DataKum
+print(gui_DataKum.id_user)
 
 class MainGUI(tk.Tk):
     def __init__(self):
@@ -51,7 +57,28 @@ class tampilDataKum(tk.Frame):
             highlightthickness = 0,
             relief = "ridge"
         )
+        date = requests.get("http://localhost:5000/kasus/date")
+        
+        def tampilKumulatif():
+            import login
+            url = "http://localhost:5000/kasus/user_id/" +str(gui_DataKum.id_user)
+            date = requests.get("http://localhost:5000/kasus/date")
+            myjson = {
+                'tanggal': date.text
+            }
+            response = requests.get(url,json = myjson)
+            return response.text
 
+        global dataKumulatifs
+        dataKumulatifs = tampilKumulatif()
+        print(dataKumulatifs)
+        x = requests.get("http://localhost:5000/users/"+str(gui_DataKum.id_user))
+        meninggal = sum(map(lambda x: int(x['meninggal']), json.loads(dataKumulatifs)))
+        sembuh = sum(map(lambda x: int(x['sembuh']), json.loads(dataKumulatifs)))
+        positif = sum(map(lambda x: int(x['positif']), json.loads(dataKumulatifs)))
+        kota = str(x.json()[0]['kota'])
+        print(kota)
+        
         canvas.place(x = 0, y = 0)
         entry_image_1 = PhotoImage(
             file=relative_to_assets("entry_1.png"))
@@ -60,16 +87,14 @@ class tampilDataKum(tk.Frame):
             385.0,
             image=entry_image_1
         )
-        entry_1 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_1.place(
-            x=616.0,
-            y=365.0,
-            width=268.0,
-            height=38.0
+        #sembuh
+        entry_1 = canvas.create_text(
+            616.0,
+            368.0,
+            anchor="nw",
+            text=sembuh,
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         entry_image_2 = PhotoImage(
@@ -84,12 +109,15 @@ class tampilDataKum(tk.Frame):
             bg="#F4F4F4",
             highlightthickness=0
         )
-        entry_2.place(
-            x=616.0,
-            y=439.0,
-            width=268.0,
-            height=38.0
+        entry_2 = canvas.create_text(
+            616.0,
+            440.0,
+            anchor="nw",
+            text=meninggal,
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
+        
 
         canvas.create_text(
             609.0,
@@ -107,16 +135,13 @@ class tampilDataKum(tk.Frame):
             311.0,
             image=entry_image_3
         )
-        entry_3 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_3.place(
-            x=617.0,
-            y=291.0,
-            width=268.0,
-            height=38.0
+        entry_3 = canvas.create_text(
+            616.0,
+            294.0,
+            anchor="nw",
+            text=positif,
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         canvas.create_text(
@@ -135,16 +160,13 @@ class tampilDataKum(tk.Frame):
             237.0,
             image=entry_image_4
         )
-        entry_4 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_4.place(
-            x=616.0,
-            y=217.0,
-            width=268.0,
-            height=38.0
+        entry_4 = canvas.create_text(
+            616.0,
+            220.0,
+            anchor="nw",
+            text=date.text,
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         canvas.create_text(
@@ -168,11 +190,14 @@ class tampilDataKum(tk.Frame):
             bg="#F4F4F4",
             highlightthickness=0
         )
-        entry_5.place(
-            x=616.0,
-            y=144.0,
-            width=268.0,
-            height=38.0
+
+        entry_5 = canvas.create_text(
+            616.0,
+            150.0,
+            anchor="nw",
+            text=kota,
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         canvas.create_text(
@@ -180,51 +205,6 @@ class tampilDataKum(tk.Frame):
             120.0,
             anchor="nw",
             text="Kota",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            152.0,
-            anchor="nw",
-            text="Autofill per User",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            226.0,
-            anchor="nw",
-            text="Ambil dari Input",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            300.0,
-            anchor="nw",
-            text="Ambil dari Database",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            373.0,
-            anchor="nw",
-            text="Ambil dari Database",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            447.0,
-            anchor="nw",
-            text="Ambil dari Database",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -278,7 +258,7 @@ class tampilDataKum(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame(DataKum),
+            command=lambda: master.switch_frame("homepage"),
             relief="flat"
         )
         button_1.place(
@@ -287,6 +267,7 @@ class tampilDataKum(tk.Frame):
             width=102.0,
             height=37.0
         )
+
         master.resizable(False, False)
         master.mainloop()
 

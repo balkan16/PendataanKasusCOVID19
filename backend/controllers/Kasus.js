@@ -25,7 +25,8 @@ export const getKasusByUserId = async (req,res) => {
     try{
         const kasus = await Kasus.findAll({
             where:{
-                user_id: req.params.user_id
+                user_id: req.params.user_id,
+                tanggal: req.body
             }
         });
         res.json(kasus);
@@ -38,7 +39,7 @@ export const getKasusById = async (req,res) => {
     try{
         const kasus = await Kasus.findAll({
             where:{
-                id: req.params.id
+                id: req.params.id,
             }
         });
         res.json(kasus);
@@ -46,6 +47,20 @@ export const getKasusById = async (req,res) => {
         res.json({ message: error.message});
     }
 }
+
+// export const getKasusByIdDate = async (req,res) => {
+//     try{
+//         const kasus = await Kasus.findAll({
+//             where:{
+//                 id: req.params.id
+//                 date: req.body
+//             }
+//         });
+//         res.json(kasus);
+//     } catch (error) {
+//         res.json({ message: error.message});
+//     }
+// }
 
 export const updateKasus = async (req,res) => {
     try{
