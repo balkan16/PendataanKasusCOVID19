@@ -80,7 +80,7 @@ class Register(tk.Frame):
             bd=0,
             bg="#F4F4F4",
             highlightthickness=0,
-            textvariable=nama_reg
+            textvariable=surel_reg
         )
         entry_1.place(
             x=602.0,
@@ -100,7 +100,7 @@ class Register(tk.Frame):
             bd=0,
             bg="#F4F4F4",
             highlightthickness=0,
-            textvariable=surel_reg
+            textvariable=nama_reg
         )
         entry_2.place(
             x=603.0,

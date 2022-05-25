@@ -4,6 +4,7 @@
 
 
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
@@ -242,6 +243,21 @@ class Homepage(tk.Frame):
             width=102.0,
             height=37.0
         )
+
+        import login
+        id_user = login.id_user
+        x = requests.get("http://localhost:5000/users/"+str(login.id_user))
+        response = x.json()
+        name = response[0]['name']
+        self.notif = canvas.create_text(
+                        774.0,
+                        80.9999999999999,
+                        anchor="nw",
+                        text="Selamat Datang "+name,
+                        fill="#000000",
+                        font=("Inter", 17 * -1)
+        )
+
         master.resizable(False, False)
         master.mainloop()
 

@@ -3,17 +3,23 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 
+from cgitb import text
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
+from datetime import datetime
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_UbahData")
 
+sembuh_ubah=None
+meninggal_ubah=None
+positif_ubah=None
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -42,6 +48,13 @@ class UbahData(tk.Frame):
         master.title('Pendataan Kasus Covid-19 Indonesia')
         master.configure(bg = "#FFFFFF")
         #declaring variable for Login
+        global sembuh_ubah
+        global meninggal_ubah
+        global positif_ubah
+        
+        sembuh_ubah=StringVar()
+        meninggal_ubah=StringVar()
+        positif_ubah=StringVar()
 
         canvas = Canvas(
             bg = "#FFFFFF",
@@ -53,6 +66,8 @@ class UbahData(tk.Frame):
         )
 
         canvas.place(x = 0, y = 0)
+
+        #entry 1=sembuh
         entry_image_1 = PhotoImage(
             file=relative_to_assets("entry_1.png"))
         entry_bg_1 = canvas.create_image(
@@ -63,7 +78,8 @@ class UbahData(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=sembuh_ubah
         )
         entry_1.place(
             x=616.0,
@@ -71,7 +87,8 @@ class UbahData(tk.Frame):
             width=268.0,
             height=38.0
         )
-
+        
+        #entry 2=meninggal
         entry_image_2 = PhotoImage(
             file=relative_to_assets("entry_2.png"))
         entry_bg_2 = canvas.create_image(
@@ -82,7 +99,8 @@ class UbahData(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=meninggal_ubah
         )
         entry_2.place(
             x=616.0,
@@ -100,6 +118,7 @@ class UbahData(tk.Frame):
             font=("Inter", 20 * -1)
         )
 
+        #entry 3=positif
         entry_image_3 = PhotoImage(
             file=relative_to_assets("entry_3.png"))
         entry_bg_3 = canvas.create_image(
@@ -110,7 +129,8 @@ class UbahData(tk.Frame):
         entry_3 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=positif_ubah
         )
         entry_3.place(
             x=617.0,
@@ -128,6 +148,7 @@ class UbahData(tk.Frame):
             font=("Inter", 20 * -1)
         )
 
+        #entry 4 = tanggal
         entry_image_4 = PhotoImage(
             file=relative_to_assets("entry_4.png"))
         entry_bg_4 = canvas.create_image(
@@ -135,16 +156,15 @@ class UbahData(tk.Frame):
             209.0,
             image=entry_image_4
         )
-        entry_4 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_4.place(
-            x=616.0,
-            y=189.0,
-            width=268.0,
-            height=38.0
+
+
+        canvas.create_text(
+            616.0,
+            195.0,
+            anchor="nw",
+            text= datetime.today().strftime('%Y-%m-%d'),
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         canvas.create_text(
@@ -152,34 +172,6 @@ class UbahData(tk.Frame):
             165.0,
             anchor="nw",
             text="Tanggal",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        entry_image_5 = PhotoImage(
-            file=relative_to_assets("entry_5.png"))
-        entry_bg_5 = canvas.create_image(
-            750.0,
-            136.0,
-            image=entry_image_5
-        )
-        entry_5 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_5.place(
-            x=616.0,
-            y=116.0,
-            width=268.0,
-            height=38.0
-        )
-
-        canvas.create_text(
-            609.0,
-            92.0,
-            anchor="nw",
-            text="Kota",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -225,7 +217,7 @@ class UbahData(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: ubahData(),
             relief="flat"
         )
         button_1.place(
@@ -249,7 +241,7 @@ class UbahData(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=lambda: master.switch_frame("homepage"),
             relief="flat"
         )
         button_2.place(
@@ -259,14 +251,51 @@ class UbahData(tk.Frame):
             height=37.0
         )
 
-        canvas.create_text(
-            625.0,
-            124.0,
-            anchor="nw",
-            text="Autofill per User",
-            fill="#ABABAB",
-            font=("Inter", 20 * -1)
+        self.notif = canvas.create_text(
+                        594.0,
+                        520.9999999999999,
+                        anchor="nw",
+                        text="",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
         )
+
+
+        def ubahData():
+
+            meninggal2 = meninggal_ubah.get()
+            sembuh2 = sembuh_ubah.get()
+            positif2 = positif_ubah.get()
+
+            print(meninggal2)
+            print(sembuh2)
+            print(positif2)
+            date = requests.get("http://localhost:5000/kasus/date")
+            print(date.text)
+            import login
+            id = login.id_user
+
+            try:
+                if meninggal2=='' or sembuh2=='' or positif2=='':
+                    canvas.itemconfig(self.notif, text= "tidak boleh ada data yang kosong")
+                else:
+                    url = 'http://localhost:5000/kasus'
+                    myjson = {
+                        'positif':positif2,
+                        'sembuh': sembuh2,
+                        'meninggal':meninggal2,
+                        'tanggal': date.text,
+                        'user_id': id
+                        }
+                    x = requests.post(url, json = myjson)
+                    print(x.status_code)
+                    canvas.itemconfig(self.notif, text= "Data berhasil diubah!")
+            except:
+                entry_1.delete(0, 'end')
+                entry_2.delete(0, 'end')
+                entry_3.delete(0, 'end')
+                canvas.itemconfig(self.notif, text= "Gagal Menghubungkan ke Server")
+                
         master.resizable(False, False)
         master.mainloop()
 

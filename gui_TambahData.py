@@ -17,6 +17,7 @@ from datetime import datetime
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_tambahdata")
 
+ip_server = "localhost"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -237,7 +238,7 @@ class TambahData(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame("dataKum"),
+            command=lambda: master.switch_frame("homepage"),
             relief="flat"
         )
         button_2.place(
