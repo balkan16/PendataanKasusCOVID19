@@ -8,7 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -124,6 +124,7 @@ class Homepage(tk.Frame):
             font=("Inter Light", 16 * -1)
         )
 
+        #data Kumulatif
         button_image_1 = PhotoImage(
             file=relative_to_assets_homepage("button_1.png"))
         button_1 = Button(
@@ -139,14 +140,15 @@ class Homepage(tk.Frame):
             width=120.0,
             height=120.0
         )
-
+        
+        #Tambah Data
         button_image_2 = PhotoImage(
             file=relative_to_assets_homepage("button_2.png"))
         button_2 = Button(
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=lambda: master.switch_frame("tambahData"),
             relief="flat"
         )
         button_2.place(
@@ -156,13 +158,14 @@ class Homepage(tk.Frame):
             height=120.0
         )
 
+        #data pilihan
         button_image_3 = PhotoImage(
             file=relative_to_assets_homepage("button_3.png"))
         button_3 = Button(
             image=button_image_3,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
+            command=lambda: master.switch_frame("tampilDataPilihan"),
             relief="flat"
         )
         button_3.place(
@@ -172,13 +175,14 @@ class Homepage(tk.Frame):
             height=120.0
         )
 
+        #ubah profil
         button_image_4 = PhotoImage(
             file=relative_to_assets_homepage("button_4.png"))
         button_4 = Button(
             image=button_image_4,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_4 clicked"),
+            command=lambda: master.switch_frame("ubahProfil"),
             relief="flat"
         )
         button_4.place(
@@ -188,13 +192,14 @@ class Homepage(tk.Frame):
             height=120.0
         )
 
+        #ubah data
         button_image_5 = PhotoImage(
             file=relative_to_assets_homepage("button_5.png"))
         button_5 = Button(
             image=button_image_5,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_5 clicked"),
+            command=lambda: master.switch_frame("ubahData"),
             relief="flat"
         )
         button_5.place(
@@ -204,6 +209,7 @@ class Homepage(tk.Frame):
             height=120.0
         )
 
+        #bantuan
         button_image_6 = PhotoImage(
             file=relative_to_assets_homepage("button_6.png"))
         button_6 = Button(
@@ -220,6 +226,7 @@ class Homepage(tk.Frame):
             height=120.0
         )
 
+        #logout
         button_image_7 = PhotoImage(
             file=relative_to_assets_homepage("button_7.png"))
         button_7 = Button(

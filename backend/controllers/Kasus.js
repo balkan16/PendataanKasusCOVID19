@@ -1,5 +1,6 @@
 import Kasus from "../models/kasusModel.js"
 
+
 export const getAllKasus = async (req,res) => {
     try{
         const kasus = await Kasus.findAll();
@@ -59,4 +60,12 @@ export const updateKasus = async (req,res) => {
     } catch (error) {
         res.json({ message: error.message});
     }
+}
+
+export const getTime = async (req,res) => {
+    var todayDate = new Date();
+    todayDate.setMinutes(todayDate.getMinutes() - todayDate.getTimezoneOffset()); 
+    todayDate = todayDate.toISOString().slice(0,10); 
+    console.log(todayDate);
+    res.send(todayDate);
 }

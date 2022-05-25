@@ -12,7 +12,8 @@ Content-Type: application/json
 {
     "positif": 1,
     "meninggal": 2,
-    "sembuh": 3
+    "sembuh": 3,
+    "user_id": 12
 }
 
 ###
@@ -22,10 +23,20 @@ Content-Type: application/json
 {
     "positif": 2,
     "meninggal": 1,
-    "sembuh": 4
+    "sembuh": 4,
+    "user_id": 12
 }
 ###
-GET http://localhost:5000/users
+GET http://localhost:5000/users/5
+
+
+###
+PATCH http://localhost:5000/users/5
+Content-Type: application/json
+
+{
+    "email": "arifbin@gmail.com"
+}
 
 ###
 POST http://localhost:5000/users
@@ -49,11 +60,24 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsIm5hbWUiOiJCYWxrYW4iLCJlbWFpbCI6ImJhbGthbmtoaWxtaUBnbWFpbC5jb20iLCJpYXQiOjE2NTA5NTE3MTEsImV4cCI6MTY1MTAzODExMX0.ri3YLWHDRnVnfZFRiikGOdD0-PpX6P2CG0QPX2VfIJI
+GET http://localhost:5000/users/12
 
 ###
 GET http://localhost:5000/users/token
 
 ###
 DELETE http://localhost:5000/users/logout
+
+###
+GET http://localhost:5000/kasus/date
+
+###
+GET http://localhost:5000/kasus/user_id/12
+
+###
+GET http://localhost:5000/kasus/DateRange
+Content-Type: application/json
+
+{
+    "endDate": "25/5/2022"
+}

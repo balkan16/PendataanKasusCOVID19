@@ -4,11 +4,12 @@
 
 
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
 
 
 
@@ -18,6 +19,9 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets_datakum")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+meninggal = None
+sembuh = None
+positif = None
 
 class MainGUI(tk.Tk):
     def __init__(self):
@@ -54,19 +58,22 @@ class DataKum(tk.Frame):
             )
 
             canvas.place(x = 0, y = 0)
-            entry_image_1 = PhotoImage(
-                file=relative_to_assets("entry_1.png"))
-            entry_bg_1 = canvas.create_image(
-                744.0,
-                250.0,
-                image=entry_image_1
-            )
-            entry_1 = Entry(
-                bd=0,
-                bg="#F4F4F4",
-                highlightthickness=0
-            )
-            entry_1.place(
+            n = StringVar()
+            self.kotaTerpilih = ttk.Combobox(master, width = 27,state="readonly", 
+                                        textvariable = n,font=("Inter", 12 * -1))
+
+            # Adding combobox drop down list
+            self.kotaTerpilih['values'] = (' Jakarta', 
+                                    ' Tangerang',
+                                    ' Depok',
+                                    ' Bekasi',
+                                    ' Bogor',
+                                    ' Palembang', 
+                                    )
+
+            self.kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: master.focus())
+
+            self.kotaTerpilih.place(
                 x=610.0,
                 y=230.0,
                 width=268.0,
@@ -91,6 +98,9 @@ class DataKum(tk.Frame):
                 width=268.0,
                 height=38.0
             )
+            date = requests.get("http://localhost:5000/kasus/date")
+            entry_2.insert(0, "YYYY-MM-DD")
+            entry_2.bind("<Button-1>", lambda a: entry_2.delete(0, tk.END))
 
             canvas.create_text(
                 603.0,
@@ -114,10 +124,11 @@ class DataKum(tk.Frame):
                 603.0,
                 280.0,
                 anchor="nw",
-                text="Tanggal",
+                text="Per Tanggal",
                 fill="#000000",
                 font=("Inter", 20 * -1)
             )
+
 
             canvas.create_rectangle(
                 0.0,
@@ -186,6 +197,9 @@ class DataKum(tk.Frame):
             )
             master.resizable(False, False)
             master.mainloop()
+
+            
+                
 
 if __name__ == "__main__":
     app = MainGUI()

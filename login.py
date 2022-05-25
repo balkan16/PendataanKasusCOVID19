@@ -18,6 +18,7 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets_login")
 
 def relative_to_assets_login(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+id_user = None
 
 new_register = 0
 class MainGUI(tk.Tk):
@@ -172,7 +173,7 @@ class Login(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame("Register"),
+            command=lambda: master.switch_frame("register"),
             relief="flat"
         )
         button_2.place(
@@ -206,22 +207,23 @@ class Login(tk.Frame):
             image=image_image_1
         )
 
+        self.notif = canvas.create_text(
+                        595.0,
+                        329.9999999999999,
+                        anchor="nw",
+                        text="",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+        )
+
         def login():
         #getting form data
+            global id_user
             uname=username.get()
             pwd=password.get()
             #applying empty validation
             if uname=='' or pwd=='':
-                message.set("fill the empty field!!!")
-                canvas.create_text(
-                        595.0,
-                        329.9999999999999,
-                        anchor="nw",
-                        text="Email dan Password tidak boleh kosong",
-                        fill="#ff0000",
-                        font=("Inter", 17 * -1)
-                )
-                # print(x.text)
+                canvas.itemconfig(self.notif, text= "username dan password tidak boleh kosong")
             else:
                 print(uname,pwd)
                 url = 'http://localhost:5000/users/login'
@@ -232,21 +234,19 @@ class Login(tk.Frame):
                 x = requests.post(url, json = myjson)
                 #print the response text (the content of the requested file):
                 if x.status_code == 200:
+                    print(x.json())
+                    response = x.json()
+                    id_user = response['userId']
+                    print(id_user)
+                    print("here")
                     #navigate to menu page
                     master.switch_frame("homepage")
+                    
                 else:
                     entry_1.delete(0, 'end')
                     entry_2.delete(0, 'end')
                     jsonResponse = x.json()
-                    canvas.create_text(
-                        595.0,
-                        329.9999999999999,
-                        anchor="nw",
-                        text=jsonResponse["msg"],
-                        fill="#ff0000",
-                        font=("Inter", 17 * -1)
-                    )
-                    print(x.text)
+                    canvas.itemconfig(self.notif, text= jsonResponse["msg"])
           
         # Muncul setelah Register akun baru
         if(new_register == 1):

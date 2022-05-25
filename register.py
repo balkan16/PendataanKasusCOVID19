@@ -4,17 +4,23 @@
 
 
 #import requests
+from cgitb import text
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar,ttk
+from tkinter import Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_register")
 
+nama_reg=""
+surel_reg=""
+password_reg=""
+password_konf_reg=""
 
 def relative_to_assets_register(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -43,6 +49,15 @@ class Register(tk.Frame):
         master.title('Pendataan Kasus Covid-19 Indonesia')
         #window.configure(bg = "#FFFFFF")
 
+        global nama_reg
+        global surel_reg
+        global password_reg
+        global password_konf_reg
+
+        nama_reg = StringVar()
+        surel_reg = StringVar()
+        password_reg = StringVar()
+        password_konf_reg = StringVar()
 
         canvas = Canvas(
             bg = "#FFFFFF",
@@ -64,7 +79,8 @@ class Register(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=nama_reg
         )
         entry_1.place(
             x=602.0,
@@ -83,7 +99,8 @@ class Register(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=surel_reg
         )
         entry_2.place(
             x=603.0,
@@ -102,7 +119,8 @@ class Register(tk.Frame):
         entry_3 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=password_reg
         )
         entry_3.place(
             x=602.0,
@@ -129,28 +147,6 @@ class Register(tk.Frame):
             font=("Inter", 20 * -1)
         )
 
-        n = StringVar()
-        self.kotaTerpilih = ttk.Combobox(master, width = 27,state="readonly", 
-                                    textvariable = n,font=("Inter", 12 * -1))
-
-        # Adding combobox drop down list
-        self.kotaTerpilih['values'] = (' Jakarta', 
-                                ' Tangerang',
-                                ' Depok',
-                                ' Bekasi',
-                                ' Bogor',
-                                ' Palembang', 
-                                )
-
-        self.kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: master.focus())
-
-        self.kotaTerpilih.place(
-            x=600.0,
-            y=375.0,
-            width=268.0,
-            height=38.0
-        )
-
         canvas.create_text(
             595.0,
             202.0,
@@ -170,7 +166,8 @@ class Register(tk.Frame):
         entry_4 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=password_konf_reg
         )
         entry_4.place(
             x=602.0,
@@ -195,6 +192,28 @@ class Register(tk.Frame):
             text="Kota",
             fill="#000000",
             font=("Inter", 20 * -1)
+        )
+
+        n = StringVar()
+        self.kotaTerpilih = ttk.Combobox(master, width = 27,state="readonly", 
+                                    textvariable = n,font=("Inter", 12 * -1))
+
+        # Adding combobox drop down list
+        self.kotaTerpilih['values'] = (' Jakarta', 
+                                ' Tangerang',
+                                ' Depok',
+                                ' Bekasi',
+                                ' Bogor',
+                                ' Palembang', 
+                                )
+
+        self.kotaTerpilih.bind("<<ComboboxSelected>>",lambda e: master.focus())
+
+        self.kotaTerpilih.place(
+            x=602.0,
+            y=374.0,
+            width=268.0,
+            height=38.0
         )
 
         canvas.create_rectangle(
@@ -245,7 +264,7 @@ class Register(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.new_regist(),
+            command=lambda:register(),
             relief="flat"
         )
         button_2.place(
@@ -262,58 +281,64 @@ class Register(tk.Frame):
             413.0,
             image=image_image_1
         )
+
+
+        self.notif = canvas.create_text(
+                        594.0,
+                        520.9999999999999,
+                        anchor="nw",
+                        text="",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+        )
+
+        
+
+        def register():
+            import login
+            global new_register
+            new_register = 1
+            email=surel_reg.get()
+            name=nama_reg.get()
+            pwd=password_reg.get()
+            confPwd=password_konf_reg.get()
+            kota= str(self.kotaTerpilih.get())
+            print(kota)
+            # self.master.switch_frame(Login)
+            #applying empty validation
+            try:
+                if email=='' or pwd=='' or confPwd=='' or name=='':
+                    canvas.itemconfig(self.notif, text= "tidak boleh ada data yang kosong")
+                else:
+                    print(email,pwd)
+                    url = 'http://localhost:5000/users'
+                    myjson = {
+                        'name':name,
+                        'email': email,
+                        'password':pwd,
+                        'confPassword':confPwd,
+                        'kota': kota
+                        }
+                    x = requests.post(url, json = myjson)
+                    print(x.status_code)
+                    canvas.itemconfig(self.notif, text= "Akun berhasil didaftarkan")
+                    # #print the response text (the content of the requested file):
+                    # if x.status_code == 200:
+                    #     self.master.switch_frame(Login)
+                    # else:
+                    #     self.entry_1.delete(0, 'end')
+                    #     self.entry_2.delete(0, 'end')
+                    #     jsonResponse = x.json()
+                    #     self.canvas.itemconfig(self.errorregis, text=jsonResponse["msg"])
+                    #     print(x.text)
+            except:
+                entry_1.delete(0, 'end')
+                entry_2.delete(0, 'end')
+                canvas.itemconfig(self.notif, text= "Gagal Menghubungkan ke Server")
+
+
         master.resizable(False, False)
         master.mainloop()
-
-
-
-        
-        
-    def new_regist(self):
-        new_register = 0
-        self.master.switch_frame(Login)
-
-    def register(self):
-        global new_register
-        new_register = 1
-        uname=surel.get()
-        name="arif"
-        pwd=password.get()
-        confPwd=confPassword.get()
-        kota= str(self.kotaTerpilih.get())
-        print(kota)
-        # self.master.switch_frame(Login)
-        #applying empty validation
-        try:
-            if uname=='' or pwd=='':
-                message.set("fill the empty field!!!")
-                self.canvas.itemconfig(self.errorregis, text=message)
-            else:
-                print(uname,pwd)
-                url = 'http://localhost:5000/users'
-                myjson = {
-                    'name':name,
-                    'email': uname,
-                    'password':pwd,
-                    'confPassword':confPwd,
-                    'kota': kota
-                    }
-                x = requests.post(url, json = myjson)
-                print(x.status_code)
-                self.master.switch_frame(Login)
-                # #print the response text (the content of the requested file):
-                # if x.status_code == 200:
-                #     self.master.switch_frame(Login)
-                # else:
-                #     self.entry_1.delete(0, 'end')
-                #     self.entry_2.delete(0, 'end')
-                #     jsonResponse = x.json()
-                #     self.canvas.itemconfig(self.errorregis, text=jsonResponse["msg"])
-                #     print(x.text)
-        except:
-            self.entry_1.delete(0, 'end')
-            self.entry_2.delete(0, 'end')
-            self.canvas.itemconfig(self.errorregis, text="Gagal Menghubungkan ke Server")
 
 if __name__ == "__main__":
     app = MainGUI()

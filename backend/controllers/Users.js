@@ -11,6 +11,34 @@ export const getUsers = async (req,res) => {
     }
 }
 
+export const getUsersById = async (req,res) => {
+    try{
+        const users = await Users.findAll({
+            where:{
+                id: req.params.id
+            }
+        });
+        res.json(users);
+    } catch (error) {
+        res.json({ message: error.message});
+    }
+}
+
+export const updateUsers = async (req,res) => {
+    try{
+        await Users.update(req.body,{
+            where:{
+                id: req.params.id
+            }
+        });
+        res.json({
+            "message": "Data User Berhasil Diperbarui"
+        });
+    } catch (error) {
+        res.json({ message: error.message});
+    }
+}
+
 export const Register = async(req,res) => {
     try{
         const { name, email, kota, password, confPassword } = req.body;
@@ -63,7 +91,7 @@ export const Login = async(req,res) => {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000
         });
-        res.json({ accessToken });
+        res.json({ userId });
     } catch (error){
         res.status(404).json({msg:"Email tidak ditemukan"})
     }

@@ -4,17 +4,18 @@
 
 
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar
 
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets_UbahProfil")
 
-
+message = ""
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
@@ -43,6 +44,12 @@ class UbahProfil(tk.Frame):
         master.title('Pendataan Kasus Covid-19 Indonesia')
         master.configure(bg = "#FFFFFF")
         #declaring variable for Login
+        global  message
+        global email
+        global emailKonfirmasi
+        email = StringVar ()
+        emailKonfirmasi = StringVar ()
+        message= StringVar ()
 
         canvas = Canvas(
             bg = "#FFFFFF",
@@ -64,7 +71,8 @@ class UbahProfil(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable= email
         )
         entry_1.place(
             x=616.0,
@@ -83,7 +91,8 @@ class UbahProfil(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable= emailKonfirmasi
         )
         entry_2.place(
             x=616.0,
@@ -96,7 +105,7 @@ class UbahProfil(tk.Frame):
             609.0,
             193.0,
             anchor="nw",
-            text="Kota",
+            text="Email",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -105,7 +114,7 @@ class UbahProfil(tk.Frame):
             609.0,
             267.0,
             anchor="nw",
-            text="Username",
+            text="Konfirmasi Email",
             fill="#000000",
             font=("Inter", 20 * -1)
         )
@@ -152,13 +161,14 @@ class UbahProfil(tk.Frame):
             height=36.0
         )
 
+        #ubah email
         button_image_2 = PhotoImage(
             file=relative_to_assets("button_2.png"))
         button_2 = Button(
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_2 clicked"),
+            command=lambda:ubahSurel(),
             relief="flat"
         )
         button_2.place(
@@ -200,7 +210,7 @@ class UbahProfil(tk.Frame):
             image=button_image_3,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_3 clicked"),
+            command=lambda: master.switch_frame("homepage"),
             relief="flat"
         )
         button_3.place(
@@ -209,6 +219,57 @@ class UbahProfil(tk.Frame):
             width=102.0,
             height=37.0
         )
+
+        self.notif = canvas.create_text(
+                        610.0,
+                        339.9999999999999,
+                        anchor="nw",
+                        text="",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+        )
+        def ubahSurel():
+            # print("here")
+            global message
+            email2=email.get()
+            emailKonfirmasi2=emailKonfirmasi.get()
+            if email2=='' or emailKonfirmasi2=='':
+                entry_1.delete(0, 'end')
+                entry_2.delete(0, 'end')
+                canvas.itemconfig(self.notif, text= "email dan Konfirmasi Email tidak boleh kosong")
+                # message = "Email & Konfirmasi Email Tidak Boleh Kosong"
+                # print(x.text)
+            elif email2!=emailKonfirmasi2:
+                entry_1.delete(0, 'end')
+                entry_2.delete(0, 'end')
+                canvas.itemconfig(self.notif, text= "email dan Konfirmasi Email tidak sama")
+            else:
+                    print(email2,emailKonfirmasi2)
+                    import login
+                    url = 'http://localhost:5000/users/'+str(login.id_user)
+                    myjson = {
+                        'email': email2
+                    }
+                    x = requests.patch(url, json = myjson)
+                    #print the response text (the content of the requested file):
+                    if x.status_code == 200:
+                        canvas.itemconfig(self.notif, text= "Email berhasil diganti")
+                    else:
+                        entry_1.delete(0, 'end')
+                        entry_2.delete(0, 'end')
+                        jsonResponse = x.json()
+                        # canvas.create_text(
+                        #     595.0,
+                        #     329.9999999999999,
+                        #     anchor="nw",
+                        #     text=jsonResponse["msg"],
+                        #     fill="#ff0000",
+                        #     font=("Inter", 17 * -1)
+                        # )
+                        print(x.text)
+
+
+
         master.resizable(False, False)
         master.mainloop()
 

@@ -1,5 +1,9 @@
 {
   "devDependencies": {
     "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "dateonly": "^1.2.0",
+    "response-time": "^2.3.2"
   }
 }

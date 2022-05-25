@@ -3,12 +3,15 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 
+from cgitb import text
 from pathlib import Path
+import requests
 
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 import tkinter as tk
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, StringVar, ttk
+from datetime import datetime
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -43,6 +46,14 @@ class TambahData(tk.Frame):
         master.configure(bg = "#FFFFFF")
         #declaring variable for Login
 
+        #declaring variable for Login
+        global  meninggal
+        global positif
+        global sembuh
+
+        meninggal = StringVar ()
+        positif = StringVar ()
+        sembuh= StringVar ()
 
 
         canvas = Canvas(
@@ -65,7 +76,8 @@ class TambahData(tk.Frame):
         entry_1 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=positif
         )
         entry_1.place(
             x=616.0,
@@ -84,7 +96,8 @@ class TambahData(tk.Frame):
         entry_2 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=sembuh
         )
         entry_2.place(
             x=616.0,
@@ -112,7 +125,8 @@ class TambahData(tk.Frame):
         entry_3 = Entry(
             bd=0,
             bg="#F4F4F4",
-            highlightthickness=0
+            highlightthickness=0,
+            textvariable=meninggal
         )
         entry_3.place(
             x=617.0,
@@ -130,6 +144,7 @@ class TambahData(tk.Frame):
             font=("Inter", 20 * -1)
         )
 
+        #entry_4 = tanggal
         entry_image_4 = PhotoImage(
             file=relative_to_assets("entry_4.png"))
         entry_bg_4 = canvas.create_image(
@@ -137,16 +152,15 @@ class TambahData(tk.Frame):
             209.0,
             image=entry_image_4
         )
-        entry_4 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_4.place(
-            x=616.0,
-            y=189.0,
-            width=268.0,
-            height=38.0
+
+
+        canvas.create_text(
+            616.0,
+            195.0,
+            anchor="nw",
+            text= datetime.today().strftime('%Y-%m-%d'),
+            fill="#000000",
+            font=("Inter", 20 * -1)
         )
 
         canvas.create_text(
@@ -155,43 +169,6 @@ class TambahData(tk.Frame):
             anchor="nw",
             text="Tanggal",
             fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        entry_image_5 = PhotoImage(
-            file=relative_to_assets("entry_5.png"))
-        entry_bg_5 = canvas.create_image(
-            750.0,
-            136.0,
-            image=entry_image_5
-        )
-        entry_5 = Entry(
-            bd=0,
-            bg="#F4F4F4",
-            highlightthickness=0
-        )
-        entry_5.place(
-            x=616.0,
-            y=116.0,
-            width=268.0,
-            height=38.0
-        )
-
-        canvas.create_text(
-            609.0,
-            92.0,
-            anchor="nw",
-            text="Kota",
-            fill="#000000",
-            font=("Inter", 20 * -1)
-        )
-
-        canvas.create_text(
-            625.0,
-            124.0,
-            anchor="nw",
-            text="Autofill per User",
-            fill="#ABABAB",
             font=("Inter", 20 * -1)
         )
 
@@ -236,7 +213,7 @@ class TambahData(tk.Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame("dataKum"),
+            command=lambda: tambahkanData(),
             relief="flat"
         )
         button_1.place(
@@ -260,7 +237,7 @@ class TambahData(tk.Frame):
             image=button_image_2,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: master.switch_frame("tambahData"),
+            command=lambda: master.switch_frame("dataKum"),
             relief="flat"
         )
         button_2.place(
@@ -269,8 +246,49 @@ class TambahData(tk.Frame):
             width=102.0,
             height=37.0
         )
+
+        self.notif = canvas.create_text(
+                        623.0,
+                        110.9999999999999,
+                        anchor="nw",
+                        text="",
+                        fill="#ff0000",
+                        font=("Inter", 17 * -1)
+        )
+
+        def tambahkanData():
+            meninggal2 = meninggal.get()
+            sembuh2 = sembuh.get()
+            positif2 = positif.get()
+            date = requests.get("http://localhost:5000/kasus/date")
+            print(date.text)
+            import login
+            id = login.id_user
+
+            try:
+                if meninggal2=='' or sembuh2=='' or positif2=='':
+                    canvas.itemconfig(self.notif, text= "tidak boleh ada data yang kosong")
+                else:
+                    url = 'http://localhost:5000/kasus'
+                    myjson = {
+                        'positif':positif2,
+                        'sembuh': sembuh2,
+                        'meninggal':meninggal2,
+                        'tanggal': date.text,
+                        'user_id': id
+                        }
+                    x = requests.post(url, json = myjson)
+                    print(x.status_code)
+                    canvas.itemconfig(self.notif, text= "Data berhasil ditambahkan!")
+            except:
+                self.entry_1.delete(0, 'end')
+                self.entry_2.delete(0, 'end')
+                canvas.itemconfig(self.notif, text= "Gagal Menghubungkan ke Server")
+
         master.resizable(False, False)
         master.mainloop()
+
+
 
 if __name__ == "__main__":
     app = MainGUI()

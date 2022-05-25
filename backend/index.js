@@ -21,6 +21,8 @@ try{
     console.error('Connection error:',error);
 }
 
+process.env.TZ = "Europe/Amsterdam";
+
 app.use(cors({ 
     credentials: true,
     origin:'http://localhost:5000'}));
